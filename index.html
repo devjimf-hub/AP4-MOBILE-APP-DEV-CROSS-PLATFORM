@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student App Showcase - Download Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .filters {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-select {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            background: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            min-width: 120px;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        .app-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+        }
+
+        .app-card:hover .app-logo::before {
+            animation: shine 0.6s ease-in-out;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .app-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .app-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .app-developer {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .app-section {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .app-description {
+            color: #555;
+            line-height: 1.6;
+            margin: 15px 0;
+            flex-grow: 1;
+        }
+
+        .app-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8, #6a4190);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .no-results {
+            text-align: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-top: 50px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.1rem;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .stats {
+                gap: 20px;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: auto;
+            }
+
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .app-actions {
+                flex-direction: column;
+            }
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀AP-4 MADCP Student App Showcase</h1>
+            <p>Discover amazing apps created by talented students of the subject AP-4 Mobile Application Development Cross Platform.</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalApps">0</span>
+                    <span class="stat-label">Total Apps</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalDevelopers">0</span>
+                    <span class="stat-label">Developers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalSections">0</span>
+                    <span class="stat-label">Sections</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-row">
+                <input type="text" class="search-box" id="searchInput" placeholder="🔍 Search apps, developers, or descriptions...">
+                <select class="filter-select" id="sectionFilter">
+                    <option value="">All Sections</option>
+                </select>
+                <select class="filter-select" id="sortFilter">
+                    <option value="name">Sort by Name</option>
+                    <option value="developer">Sort by Developer</option>
+                    <option value="section">Sort by Section</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="apps-grid" id="appsGrid">
+            <div class="loading">Loading apps...</div>
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            <h3>No apps found</h3>
+            <p>Try adjusting your search or filter criteria</p>
+        </div>
+    </div>
+
+    <script>
+        const appsData = [
+            {
+                id: 1,
+                name: "Focusware",
+                developer: "ABABON, GHEA CADUNGOG",
+                section: "3D",
+                description: "Designed to help you stay focused on tasks, such as coding, studying, or working on projects.",
+                driveLink: "https://drive.google.com/file/d/1sqXbzI_HJyjBU4mpQxz0c8ZKxb4UlcSg/view?usp=drive_link",
+                posterLink: "https://www.canva.com/design/DAGoiC6ptic/8xPzdJsyAvG80CczgJaQUA/edit?utm_content=DAGoiC6ptic&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            },
+            {
+                id: 2,
+                name: "BMI Calculator",
+                developer: "ABASOLO, CHRISTIAN NINO B.",
+                section: "3-TAB",
+                description: "The BMI Calculator app helps you quickly and accurately calculate your Body Mass Index using your height and weight. It provides personalized health suggestions based on your results, helping you understand your fitness level and what steps to take. With a built-in history log, you can easily track your progress over time and stay motivated on your health journey.",
+                driveLink: "https://drive.google.com/file/d/1mrw_gFHxf5cPXawqEZBU0Xly8PWNoG5w/view?usp=sharing",
+                posterLink: "https://drive.google.com/file/d/1vQ-VJgnkuBtqiXiKMyYLmGqHPVcGOMN8/view?usp=sharing"
+            },
+            {
+                id: 3,
+                name: "Captured",
+                developer: "ACOSTA, NIKKI SIX RABANES",
+                section: "3D",
+                description: "An easy App, where you can store and organize your pictures with descriptions/caption. Introducing Captured, the simple yet powerful app that lets you store, organize, and relive your favorite memories with ease. Unlike ordinary photo galleries, Captured allows you to add detailed descriptions, captions, or even short stories to each image—so you'll always remember the who, what, when, and why behind every photo.",
+                driveLink: "https://drive.google.com/file/d/1zFVwv0_6xljHjQKzVlhZ-tWHEx8bkuYp/view?usp=sharing",
+                posterLink: "https://www.canva.com/design/DAGohb7Ej2Q/j_-Van-ReOZ38oDobQXxQg/edit?utm_content=DAGohb7Ej2Q&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            },
+            {
+                id: 4,
+                name: "RMAIPTV",
+                developer: "AGSOY, RODNEY MALA-AY",
+                section: "3D",
+                description: "Free Channel in One application",
+                driveLink: "https://drive.google.com/drive/folders/1zFRww8v0W4_6JgJmgu3mvyY3xfZoS8mP",
+                posterLink: "https://www.canva.com/design/DAGoiJMCIJw/zPqNmZXwOpHfzIjwy454FA/edit?utm_content=DAGoiJMCIJw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            },
+            {
+                id: 5,
+                name: "SellTrack",
+                developer: "ALBAÑO, LOVELLA GENE PAJES",
+                section: "3D",
+                description: "SellTrack is a simple, smart, and powerful companion for managing product inventory and recording sales.",
+                driveLink: "https://drive.google.com/file/d/1zqxHgLqw-_VFTSQIRYz0R4uqR05x5i6c/view?usp=drive_link",
+                posterLink: "https://www.canva.com/design/DAGohWCHQJU/tMvf32F1OVJqVo8siSrUUw/edit?utm_content=DAGohWCHQJU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            },
+            {
+                id: 7,
+                name: "MyBookShelf",
+                developer: "ALLEGO, JHAIZZA TAN",
+                section: "3D",
+                description: "MyBookShelf is a digital library app that lets you easily add, organize, and track your books with reading status and notes in a user-friendly interface.",
+                driveLink: "https://drive.google.com/file/d/1tPXGd4QF9IZAN21HJ5tJgqyAN1n9BC_s/view?usp=sharing",
+                posterLink: "https://www.canva.com/design/DAGoOt6oTjk/78B94PFSYxgnrdMb3lTutg/edit?utm_content=DAGoOt6oTjk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            },
+            {
+                id: 8,
+                name: "Quiz App",
+                developer: "BALVEZ, MARCHAM JAMES L.",
+                section: "3-TAB",
+                description: "Improves critical thinking, strengthens memory, and makes learning easily accessible.",
+                driveLink: "https://drive.google.com/drive/folders/1n3EmcoTY0alcwQKsrSQCXc-BP4pLgQ-0?usp=sharing",
+                posterLink: "https://www.canva.com/design/DAGom3rIEGo/jJmTnP_eCAM9F5EI6SAblQ/edit?utm_content=DAGom3rIEGo&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            },
+            {
+                id: 9,
+                name: "Personal Scheduler",
+                developer: "BRIGOLI ROLLYN C.",
+                section: "3-TAB",
+                description: "Organizes tasks by title, date, time, notes, category, and recurrence, with a clear daily view",
+                driveLink: "https://drive.google.com/file/d/14_Qt4DD1JOvsbqJX8qip22hm5WEkCSLP/view?usp=drive_link",
+                posterLink: ""
+            },
+            {
+                id: 10,
+                name: "Budget Buddy",
+                developer: "BUÑAO, VINCENT NIÑO JAY NOVAL",
+                section: "3D",
+                description: "Take control of your finances with Budget Buddy — the ultimate money tracker built for students and young adults on the go. Easily log your income and expenses, view smart summaries, and stay within budget with just a few taps. Designed with a sleek dark mode and intuitive interface, Budget Buddy makes managing money feel effortless and even fun. Whether it's lunch money or tuition, every peso counts — and Budget Buddy helps you make it count.",
+                driveLink: "https://drive.google.com/file/d/1_Gy7C0BN_8CZHsWYlyk1lPGbrSuLSYOQ/view?usp=sharing",
+                posterLink: "https://www.canva.com/design/DAGofOnlhgM/G65mF7aMSiSDzT31qkawHA/edit?utm_content=DAGofOnlhgM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            },
+            {
+                id: 11,
+                name: "RECIPE BOOK",
+                developer: "BUTASLAC, IAN JANE MARABAGO",
+                section: "3D",
+                description: "Recipe Book is a simple and easy-to-use app for saving your favorite recipes. You can add your own dish photos using the camera or gallery. It lets you list ingredients and cooking time in an organized way. Quickly search and view your recipes anytime. Perfect for students, beginners, and anyone who loves to cook!",
+                driveLink: "https://drive.google.com/file/d/1u5XhPu8S3ihKbEhOtMdYGBlAkr_8K9ei/view?usp=drive_link",
+                posterLink: "https://www.canva.com/design/DAGohDfCzXg/_PIWRo24r8Rc2To3CZ0qYA/edit?utm_content=DAGohDfCzXg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            },
+            {
+                id: 12,
+                name: "Tip Calculator",
+                developer: "CUI JEFFERSON Z.",
+                section: "3-TAB",
+                description: "An easy app to calculate the tip and total bill amount at restaurants.",
+                driveLink: "https://drive.google.com/file/d/1thE6qjgzhKzcgIOP2S-TVImwLI5-jqRw/view?usp=sharing",
+                posterLink: ""
+            },
+            {
+                id: 13,
+                name: "FITFUSION",
+                developer: "DEL ROSARIO, JAY YHANSEY AMANCIO",
+                section: "3D",
+                description: "FitFusion: Workouts and tracking made easy.",
+                driveLink: "https://drive.google.com/file/d/1VBluzTCY6ynYPw37UsjyIed816lDB3RO/view",
+                posterLink: ""
+            },
+            {
+                id: 14,
+                name: "Animal Sounds Tap",
+                developer: "DELACALZADA JUNNAH L.",
+                section: "3-TAB",
+                description: "Simply tap an animals picture to play its distinctive sounds.",
+                driveLink: "https://drive.google.com/file/d/1x_rTPtFnipKO_IuuiFhsra0yfigkGHnq/view?usp=sharing",
+                posterLink: ""
+            },
+            {
+                id: 15,
+                name: "PayOmatic",
+                developer: "DEVERA, RENILYN DORADO",
+                section: "3D",
+                description: "Pay-O-Matic is a user-friendly app for quickly recording customer payments and managing transactions with ease.",
+                driveLink: "https://drive.google.com/file/d/1ktcae9pafbEA1Yeo09kQ-L_RlwmAHxAl/view?usp=drive_link",
+                posterLink: "https://www.canva.com/design/DAGoh1Cl3ws/Xjr3lXT43wRIxpUOckLCMQ/edit?utm_content=DAGoh1Cl3ws&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            },
+            {
+                id: 16,
+                name: "MoodTrack",
+                developer: "DICHOS, JEROME CASTRO",
+                section: "3D",
+                description: "Track your daily mood and discover patterns in your emotional well-being. Whether you're feeling happy, stressed, calm, or overwhelmed, MoodTrack makes it easy to record your emotions and understand your mental health journey",
+                driveLink: "https://drive.google.com/file/d/1i8LP4sGv3L1UxFjci3CxeCmDL7qoB2Y8/view?usp=sharing",
+                posterLink: ""
+            },
+            {
+                id: 17,
+                name: "GWA CALCULATOR",
+                developer: "DURON MATT LYNDON C.",
+                section: "3-TAB",
+                description: "No more manual GWA calculations! This app helps students figure out their grades in seconds with a smooth, easy-to-use interface.",
+                driveLink: "https://drive.google.com/file/d/1BEyXUCmKaT4AITtFphoxLhSGQuxpTC_9/view?usp=sharing",
+                posterLink: "https://drive.google.com/file/d/13jt0Xy39-hG1GqK_DbZA7rS4XO4Xw5d4/view?usp=sharing"
+            },
+            {
+                id: 18,
+                name: "WeightWise",
+                developer: "GONZAGA, JOHN OASIS PATIÑO",
+                section: "3D",
+                description: "WeightWise help you achieve your fitness and health goals effectively. Whether you're aiming to gain or lose weight.",
+                driveLink: "https://drive.google.com/drive/folders/1T_C8q8hMz1jh5jELLx8VtPeDJ3FGnt3M",
+                posterLink: "https://drive.google.com/file/d/1UxI5ZdP0yop9QdUE7nSq86v9aley5r6B/view?usp=sharing"
+            },
+            {
+                id: 19,
+                name: "Grocery List",
+                developer: "GRACIA JHEA ELIZABETHL.",
+                section: "3-TAB",
+                description: "Help users add items, view lists, track total prices, and view purchase history",
+                driveLink: "https://drive.google.com/file/d/1QIWgkvfWcFcMRipwkwuSFAavEZEki-oW/view?usp=sharing",
+                posterLink: ""
+            },
+            {
+                id: 20,
+                name: "Habit Hive",
+                developer: "JUNGOY, JOHNECA BALAMBAO",
+                section: "3D",
+                description: "Habithive is an app where you can organize all the hobbies you want to learn and explain why you want to learn them. You can also add pictures and mark your favorite hobbies, the ones you've truly mastered. The app includes a dashboard where users can see how many hobbies they've worked on each day, month, and year.",
+                driveLink: "https://drive.google.com/file/d/1ik4rwU2GsYN9sPeyB-XBSwu4X6EFgcjO/view?usp=sharing",
+                posterLink: "https://drive.google.com/file/d/1JQH_6XtFPPomX_lbifONV3Ql6NMEB6Y9/view?usp=sharing"
+            },
+            {
+                id: 21,
+                name: "GroceryWise",
+                developer: "LANIT, CARL CONDRAD LESMES",
+                section: "3D",
+                description: "Add items, enter prices, and GroceryWise instantly totals your list. Smart, simple, and stress-free grocery tracking.",
+                driveLink: "https://drive.google.com/drive/folders/1IRL4IFCgoSO9K4q6XD0oBU1p-2xBmgBB",
+                posterLink: ""
+            },
+            {
+                id: 22,
+                name: "Nutritrack",
+                developer: "LEORNAS, RANDY TRAPILA",
+                section: "3D",
+                description: "NutriTrack is a mobile app designed to help users monitor and manage their daily nutrition. It allows users to track the foods they eat, monitor their calorie intake, and keep a record of their health goals. The app provides useful features like food logging, nutrition information, and progress tracking to support a healthier lifestyle. It's user-friendly and aims to make healthy eating easier and more accessible for everyone.",
+                driveLink: "https://drive.google.com/file/d/1K-aZWzlL6XHErxjNjkdVtC17f45VdoAH/view?usp=sharing",
+                posterLink: "https://www.canva.com/design/DAGoi9Emvag/_nNyp6VAiSdH7P5tsQv0uA/edit?utm_content=DAGoi9Emvag&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            },
+            {
+                id: 23,
+                name: "Study Planner",
+                developer: "MANGYAO, ETHEL R.",
+                section: "3-TAB",
+                description: "Simple and intuitive app designed to helps students stay organized and manage their academic life.",
+                driveLink: "https://drive.google.com/file/d/1pbiSY1mEVkEAh_JHFBFq8QrAy_oSf5D9/view?usp=drivesdk",
+                posterLink: ""
+            },
+            {
+                id: 24,
+                name: "Number Guessing Game",
+                developer: "OTAPEL, FRANCIS I B.",
+                section: "3-TAB",
+                description: "A Number Guessing Game is a simple interactive game where the player tries to guess a randomly generated number within a specified range.",
+                driveLink: "https://drive.google.com/file/d/1ugjTLn5WhDOfTAr-BmMs03gQ9F42_KNg/view?usp=drivesdk",
+                posterLink: "https://www.canva.com/design/DAGojGx9kik/PX68O4QePfRUJeZBmGkigQ/edit"
+            },
+            {
+                id: 25,
+                name: "FLASH CARD",
+                developer: "PAJAGANAS, MARVIC ANTHONY",
+                section: "3D",
+                description: "Flashcard App is your ultimate companion for fast, focused, and flexible learning. Whether you're preparing for exams, reviewing key concepts, or building custom study sets, this app helps you turn any topic into bite-sized quizzes and interactive flashcards.",
+                driveLink: "https://drive.google.com/drive/folders/1_-gCuhha7DqBS4wSkVnt-rAZxXgec4oK?usp=drive_link",
+                posterLink: "https://drive.google.com/file/d/13cRZRi7iBAAOdjWXUCv-eGkSIDVrIFG2/view?usp=sharing"
+            },
+            {
+                id: 26,
+                name: "Pushuppal",
+                developer: "PARAS, SAMY OLE",
+                section: "3D",
+                description: "This app is likely designed to help users track or improve their push-up workouts. The APK format allows installation without using the Google Play Store. Users need to enable installation from unknown sources in their phone settings to use it. It's intended for fitness and exercise purposes.",
+                driveLink: "https://drive.google.com/drive/folders/15c6tSiAUKXTFS896tC5VxeAW6GbJ_coR",
+                posterLink: "https://www.canva.com/design/DAGoi9Emvag/_nNyp6VAiSdH7P5tsQv0uA/edit?utm_content=DAGoi9Emvag&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"
+            },
+            {
+                id: 27,
+                name: "Pocket Guard",
+                developer: "PESTAÑO, LEXA MAE SASING",
+                section: "3D",
+                description: "This APP can help how to manage your saving moneys.",
+                driveLink: "https://drive.google.com/drive/mobile/folders/1FhFFGoN07F42RTMl9C4oai4XKHhIHDLK?usp=drive_link",
+                posterLink: ""
+            },
+            {
+                id: 28,
+                name: "Sari-sari Record",
+                developer: "RAGAS, NEIL ALFREDO L.",
+                section: "3-TAB",
+                description: "No more manual Inventory and Sales Record and no more manual debts tracking. This app helps small store owners to easily manage their store's inventory.",
+                driveLink: "https://drive.google.com/file/d/1jR-ICecFOy5D-UVkGftT2V62AqT9LL5X/view?usp=sharing",
+                posterLink: ""
+            },
+            {
+                id: 29,
+                name: "BakitList",
+                developer: "SEPULVEDA, JOHN MARLOWE B.",
+                section: "3-TAB",
+                description: "Easy tracking of you destination goals! This app helps you navigate your wish list.",
+                driveLink: "https://drive.google.com/file/d/1bvAQBc5TF1TxLixi2w5MBagdaR5lapTh/view?usp=sharing",
+                posterLink: "https://drive.google.com/file/d/1xzi0mHVYFjN0bt_gWye-jeVpkaxhIXkq/view?usp=sharing"
+            },
+            {
+                id: 30,
+                name: "Bill Slip",
+                developer: "TANGKAY, KIMBERLY B.",
+                section: "3-TAB",
+                description: "Bill split generally refers to the act of dividing the total cost of a bill or purchase among multiple people or entities.",
+                driveLink: "https://drive.google.com/file/d/14S_aqzTK8jbeO5sJOK_HwAlGcWXIxkzt/view?usp=drive_link",
+                posterLink: "https://drive.google.com/file/d/1Z1l7-pQWE0Fr0fWU7k1SFpT-a4X9o8SP/view?usp=sharing"
+            },
+            {
+                id: 31,
+                name: "Gradify",
+                developer: "TAPARAN, GEMRY DELLE BATOY",
+                section: "3D",
+                description: "Gradify is a simple and smart app designed for BSIT (Bachelor of Science in Information Technology) students who want to track their academic performance with ease. Just input your subjects and grades, and Gradify will instantly calculate your General Weighted Average (GWA). It also tells you whether you qualify for the Dean's List, helping you stay motivated and on track toward academic excellence.",
+                driveLink: "https://drive.google.com/drive/folders/1xjXjIqMiYL0DGN9bEYMtbmCX3_HIUa1G?usp=drive_link",
+                posterLink: ""
+            },
+            {
+                id: 32,
+                name: "MathQuiz",
+                developer: "TAPDASAN, KEVIN N.",
+                section: "3-TAB",
+                description: "Is an engaging educational tool designed to enhance users' mathematical skills through interactive quizzes and challenges.",
+                driveLink: "https://drive.google.com/drive/folders/1jsMySsx1sbzjk5GrOBelVnBWem4RmsWG?usp=sharing",
+                posterLink: "https://drive.google.com/drive/folders/1jsMySsx1sbzjk5GrOBelVnBWem4RmsWG?usp=sharing"
+            },
+            {
+                id: 33,
+                name: "Trackify",
+                developer: "TEMPERATURA, ERIC JOHN TORION",
+                section: "3D",
+                description: "Flutter expense tracking app that makes managing your money effortless and intuitive",
+                driveLink: "https://drive.google.com/drive/folders/1-BbRkDqBFvKuM8mcXuAdaUDKrPpJpHYa",
+                posterLink: "https://www.canva.com/design/DAGolhCrEBU/in0zsC9aeykRagFdOxY90A/edit"
+            }
+        ];
+
+        let filteredApps = [...appsData];
+
+        function initializeWebsite() {
+            updateStats();
+            populateSectionFilter();
+            renderApps(filteredApps);
+            setupEventListeners();
+        }
+
+        function updateStats() {
+            const totalApps = appsData.length;
+            const totalDevelopers = new Set(appsData.map(app => app.developer)).size;
+            const totalSections = new Set(appsData.map(app => app.section)).size;
+
+            document.getElementById('totalApps').textContent = totalApps;
+            document.getElementById('totalDevelopers').textContent = totalDevelopers;
+            document.getElementById('totalSections').textContent = totalSections;
+        }
+
+        function populateSectionFilter() {
+            const sections = [...new Set(appsData.map(app => app.section))].sort();
+            const sectionFilter = document.getElementById('sectionFilter');
+            
+            sections.forEach(section => {
+                const option = document.createElement('option');
+                option.value = section;
+                option.textContent = section;
+                sectionFilter.appendChild(option);
+            });
+        }
+
+        function renderApps(apps) {
+            const appsGrid = document.getElementById('appsGrid');
+            const noResults = document.getElementById('noResults');
+
+            if (apps.length === 0) {
+                appsGrid.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            appsGrid.style.display = 'grid';
+            noResults.style.display = 'none';
+
+            appsGrid.innerHTML = apps.map(app => `
+                <div class="app-card">
+                    <div class="app-header">
+                        <div class="app-logo">${generateAppLogo(app.name)}</div>
+                        <div class="app-info">
+                            <div class="app-title">${app.name}</div>
+                            <div class="app-developer">by ${app.developer}</div>
+                            <div class="app-section">${app.section}</div>
+                        </div>
+                    </div>
+                    <div class="app-description">${app.description}</div>
+                    <div class="app-actions">
+                        <a href="${app.driveLink}" target="_blank" class="btn btn-primary" ${!app.driveLink ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                            </svg>
+                            Download App
+                        </a>
+                        ${app.posterLink ? `
+                            <a href="${app.posterLink}" target="_blank" class="btn btn-secondary">
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                                </svg>
+                                View Poster
+                            </a>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function generateAppLogo(appName) {
+            // Create emoji/icon based on app name keywords
+            const name = appName.toLowerCase();
+            
+            if (name.includes('focus')) return '🎯';
+            if (name.includes('bmi') || name.includes('calculator') && name.includes('bmi')) return '⚖️';
+            if (name.includes('captured') || name.includes('photo')) return '📸';
+            if (name.includes('iptv') || name.includes('channel')) return '📺';
+            if (name.includes('sell') || name.includes('track') && name.includes('sell')) return '💰';
+            if (name.includes('book') || name.includes('shelf')) return '📚';
+            if (name.includes('quiz')) return '🧠';
+            if (name.includes('schedule') || name.includes('planner')) return '📅';
+            if (name.includes('budget') || name.includes('buddy')) return '💵';
+            if (name.includes('recipe')) return '👨‍🍳';
+            if (name.includes('tip') && name.includes('calculator')) return '🧾';
+            if (name.includes('fit') || name.includes('fusion')) return '💪';
+            if (name.includes('animal') || name.includes('sounds')) return '🐾';
+            if (name.includes('pay') || name.includes('matic')) return '💳';
+            if (name.includes('mood') || name.includes('track') && name.includes('mood')) return '😊';
+            if (name.includes('gwa') || name.includes('calculator') && name.includes('gwa')) return '📊';
+            if (name.includes('weight')) return '🏋️';
+            if (name.includes('grocery')) return '🛒';
+            if (name.includes('habit') || name.includes('hive')) return '🐝';
+            if (name.includes('nutri') || name.includes('track') && name.includes('nutri')) return '🥗';
+            if (name.includes('study') || name.includes('planner')) return '📖';
+            if (name.includes('number') || name.includes('guessing')) return '🎲';
+            if (name.includes('flash') || name.includes('card')) return '🃏';
+            if (name.includes('pushup') || name.includes('pal')) return '🤸‍♂️';
+            if (name.includes('pocket') || name.includes('guard')) return '🔒';
+            if (name.includes('sari') || name.includes('record')) return '🏪';
+            if (name.includes('bakit') || name.includes('list')) return '✈️';
+            if (name.includes('bill') || name.includes('slip')) return '📋';
+            if (name.includes('gradify') || name.includes('grade')) return '🎓';
+            if (name.includes('math') || name.includes('quiz')) return '🔢';
+            if (name.includes('trackify') || name.includes('expense')) return '📈';
+            
+            // Default: use first letter of app name
+            return appName.charAt(0).toUpperCase();
+        }
+
+        function filterAndSortApps() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const sectionFilter = document.getElementById('sectionFilter').value;
+            const sortBy = document.getElementById('sortFilter').value;
+
+            // Filter apps
+            filteredApps = appsData.filter(app => {
+                const matchesSearch = 
+                    app.name.toLowerCase().includes(searchTerm) ||
+                    app.developer.toLowerCase().includes(searchTerm) ||
+                    app.description.toLowerCase().includes(searchTerm);
+                
+                const matchesSection = !sectionFilter || app.section === sectionFilter;
+
+                return matchesSearch && matchesSection;
+            });
+
+            // Sort apps
+            filteredApps.sort((a, b) => {
+                switch (sortBy) {
+                    case 'name':
+                        return a.name.localeCompare(b.name);
+                    case 'developer':
+                        return a.developer.localeCompare(b.developer);
+                    case 'section':
+                        return a.section.localeCompare(b.section);
+                    default:
+                        return 0;
+                }
+            });
+
+            renderApps(filteredApps);
+        }
+
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', filterAndSortApps);
+            document.getElementById('sectionFilter').addEventListener('change', filterAndSortApps);
+            document.getElementById('sortFilter').addEventListener('change', filterAndSortApps);
+        }
+
+        // Initialize the website when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeWebsite);
+
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', filterAndSortApps);
+            document.getElementById('sectionFilter').addEventListener('change', filterAndSortApps);
+            document.getElementById('sortFilter').addEventListener('change', filterAndSortApps);
+        }
+
+        // Initialize the website when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeWebsite);
+    </script>
+</body>
+</html>
