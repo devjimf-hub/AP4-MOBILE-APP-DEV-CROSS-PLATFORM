@@ -662,6 +662,15 @@
                 description: "Flutter expense tracking app that makes managing your money effortless and intuitive",
                 driveLink: "https://drive.google.com/drive/folders/1-BbRkDqBFvKuM8mcXuAdaUDKrPpJpHYa",
                 posterLink: "https://www.canva.com/design/DAGolhCrEBU/in0zsC9aeykRagFdOxY90A/edit"
+            },
+            {
+                id: 34,
+                name: "JOGMATE",
+                developer: "ALISOSO, JOSHUA MICHAEL D.",
+                section: "3D",
+                description: "Level up your jogging with JogMate – your smart fitness buddy! Track your runs, monitor progress, and stay motivated with this simple, no-sign-up app.",
+                driveLink: "https://drive.google.com/file/d/1CRJQnVjF3OQVDv_VNgXI1emz5XSAtdC4/view?usp=drive_link",
+                posterLink: "https://drive.google.com/file/d/10aCYXdChamhcVaKWezCQpeoEemlYwSuu/view?usp=drive_link"
             }
         ];
 
@@ -775,6 +784,7 @@
             if (name.includes('gradify') || name.includes('grade')) return '🎓';
             if (name.includes('math') || name.includes('quiz')) return '🔢';
             if (name.includes('trackify') || name.includes('expense')) return '📈';
+             if (name.includes('JOGMATE') || name.includes('MATE')) return '🏃';
             
             // Default: use first letter of app name
             return appName.charAt(0).toUpperCase();
